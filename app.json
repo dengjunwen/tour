@@ -1,13 +1,15 @@
 {
   "pages": [
-        "pages/index/index",
+    "pages/index/index",
     "pages/destination/destination",
      "pages/destination/cityView/cityView", 
     "pages/index/view-detail/view-detail",
     "pages/find/find",
     "pages/personal/personal",
     "pages/personal/modify-info/modify-info",
-    "pages/index/view-list/view-list"
+    "pages/index/view-list/view-list",
+    "pages/other/authorize/authorize",
+    "pages/index/goods-details/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

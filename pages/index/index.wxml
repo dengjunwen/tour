@@ -48,24 +48,24 @@
   <view class="slide">
     <view class="title">
       <text>目的地推荐 </text>
-      <text>精选推荐好玩的景区、城市</text>
+      <text>精选推荐好玩的景区</text>
     </view>
     <swiper autoplay="true" interval="3000" duration="500" indicator-dots="true" circular="true">
       <swiper-item wx:for="{{viewHot}}" wx:key="{{index}}" wx:for-item="imgs">
         <view class="slide-image">
           <view class="image-wrapper">
-            <view wx:for="{{imgs}}" wx:key="{{index}}" bindtap="enterDetail">
-              <image src="{{item.imgurl}}"></image>
-              <text>{{item.title}}</text>
+            <view wx:for="{{imgs}}" wx:key="{{index}}" >
+              <image src="{{item.pic}}" data-id="{{item.id}}" bindtap="enterDetail"></image>
+              <text>{{item.name}}</text>
             </view>
           </view>
         </view>
       </swiper-item>
     </swiper>
-    <view class="tag">
+    <!-- <view class="tag">
       <text wx:for="{{cityHot}}" wx:key="{{index}}">{{item.cityName}}</text>
       <text>更多</text>
-    </view>
+    </view> -->
   </view>
   <view class="hot-view">
     <view class="tab">
@@ -79,7 +79,7 @@
       </view>
     </view>
     <view>
-      <image src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1486064564067&di=11f3984717e07faa110d19fa7deb2f85&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01462d574eb05e32f875a429a7f9ec.gif"  wx:if="{{loading}}"></image>
+      <image src="/images/home/timg.gif"  wx:if="{{loading}}"></image>
         <view wx:for="{{viewList }}" wx:key="{{index}}" wx:if="{{!loading}}" animation="{{animationData}}" class="animationData">
           <template is="viewList" data="{{...item}}"></template>
         <view class="fill"></view>

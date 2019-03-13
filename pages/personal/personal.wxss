@@ -48,7 +48,7 @@ page {
 .persional-header .info .vip .vip-true, .persional-header .info .vip .vip-false {
   height: 60rpx;
   width: 45rpx;
-  background: url(/images/personal/img.png)no-repeat;
+   background: url("https://cdn.it120.cc/apifactory/2019/03/13/e69dd6812baa7164ab5a393be95178bc.png")no-repeat;
   background-size: 286rpx 60rpx;
   margin: 0 auto;
 }
@@ -57,9 +57,10 @@ page {
   background-position: -241rpx 0;
 }
 
-/*.persional-header .info .vip .vip-false{
-  
-}*/
+.persional-header .info .vip .vip-false{
+  background-position: -68rpx 0;
+  width: 36rpx
+}
 
 .persional-header .info .vip text:last-child {
   margin-top: 14rpx;
@@ -157,7 +158,7 @@ page {
 
 .top .left text:first-child, .top .right text:first-child {
   margin-right: 28rpx;
-  background: url(/images/personal/img.png)no-repeat;
+  background: url("https://cdn.it120.cc/apifactory/2019/03/13/e69dd6812baa7164ab5a393be95178bc.png")no-repeat;
   background-size: 286rpx 60rpx;
 }
 
@@ -195,7 +196,7 @@ page {
 }
 
 .bottom .box view text, .bottom .box text:nth-of-type(2) {
-  background: url(/images/personal/img.png)no-repeat;
+   background: url("https://cdn.it120.cc/apifactory/2019/03/13/e69dd6812baa7164ab5a393be95178bc.png")no-repeat;
   background-size: 286rpx 60rpx;
 }
 

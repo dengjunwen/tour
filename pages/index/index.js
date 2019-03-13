@@ -1,5 +1,7 @@
-import { View, star, getViewData } from "../../utils/util.js";
+const WXAPI = require('../../utils/wxapi/main')
 let app = getApp();
+
+import { View, star, getViewData, dateNow } from "../../utils/util.js"
 let cityName;
 Page({
   data: {
@@ -12,6 +14,49 @@ Page({
     loading: true,
     animationData: {}
   },
+
+  destRecommend:function(){
+    let that = this;
+    WXAPI.goodsCategory().then(function(res){
+        if(res.code === 0){
+          var data = res.data;
+          for (var i = 0; i < res.data.length; i++) {
+            if (data[i].level == 1 && data[i].type == 'tour') {
+              that.dealViewHot(data[i].id);
+              return;
+            }
+          }
+        }
+    });
+  },
+  dealViewHot: function (categoryId) {
+    let _this = this;
+    var json={
+      'categoryId':categoryId,
+      'orderBy':'ordersDown',
+      'pageSize':9
+      // 'shopId':
+    };
+    WXAPI.goods(json).then(function(res){
+        if(res.code == 0){
+          var miniArr = res.data;
+
+          //获取前9个景区信息
+          let viewHot_1 = miniArr.splice(0, 3);
+          let viewHot_2 = miniArr.splice(0, 3);
+          let viewHot_3 = miniArr.splice(0, 3);
+          // 数据结构满足[[],[],[]]结构，页面中for使用
+          let arr = [];
+          arr.push(viewHot_1);
+          viewHot_2.length > 0 ? arr.push(viewHot_2) : "";
+          viewHot_3.length > 0 ? arr.push(viewHot_3) : "";
+          _this.setData({
+            viewHot: arr
+          })
+        }
+    });
+    
+  },
   onLoad() {
     let _this = this;
     // 获取热门城市
@@ -21,34 +66,7 @@ Page({
       this.getCity();
     })
     // 获取热门景区
-    new View("http://70989421.appservice.open.weixin.qq.com/data/view.json", "get").send((res) => {
-      let data = res.data.result;
-      dealViewHot(data);
-    })
-    //  处理获取到的城市数据
-    function dealCityHot(data) {
-      // 获取前4个信息
-      let cityHot = data.splice(0, 4);
-      _this.setData({
-        allCity: data,
-        cityHot: cityHot
-      });
-    }
-    // 处理获取到的景点数据
-    function dealViewHot(data) {
-      //获取前9个景区信息
-      let viewHot_1 = data.splice(0, 3);
-      let viewHot_2 = data.splice(0, 3);
-      let viewHot_3 = data.splice(0, 3);
-      // 数据结构满足[[],[],[]]结构，页面中for使用
-      let arr = [];
-      arr.push(viewHot_1);
-      arr.push(viewHot_2);
-      arr.push(viewHot_3);
-      _this.setData({
-        viewHot: arr
-      })
-    }
+    _this.destRecommend();
   },
   getCity() {
     let cityName;
@@ -164,9 +182,10 @@ Page({
   },
   // 进入景点详情
   enterDetail(e) {
+
     let sid=e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: 'view-detail/view-detail?sid='+sid+''
+      url: 'goods-details/index?sid='+sid+''
     })
   }
 })

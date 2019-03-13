@@ -86,7 +86,7 @@ page {
 
 .desc .share .icon {
   display: block;
-  background: url(/images/home/view_detail.png) no-repeat;
+  background: url(https://cdn.it120.cc/apifactory/2019/03/13/e258ffee41a837dc9d13f9a799f11481.png) no-repeat;
   background-size: 172rpx 56rpx;
   height: 48rpx;
   width: 48rpx;
@@ -106,7 +106,7 @@ page {
  .pos .icon {
   height: 40rpx;
   width: 30rpx;
-  background: url(/images/home/view_detail.png) no-repeat;
+  background: url(https://cdn.it120.cc/apifactory/2019/03/13/e258ffee41a837dc9d13f9a799f11481.png) no-repeat;
   background-size: 172rpx 56rpx;
   background-position: -14rpx -8rpx;
   margin-right: 38rpx;
@@ -243,7 +243,7 @@ page {
   height: 8rpx;
   width: 18rpx;
   background-position: 0 0;
-  background: url(/images/home/view_detail.png) no-repeat;
+  background: url(https://cdn.it120.cc/apifactory/2019/03/13/e258ffee41a837dc9d13f9a799f11481.png) no-repeat;
   background-size: 86px 28px;
 }
 
@@ -259,7 +259,7 @@ page {
 }
 
 .preferential text:nth-of-type(1), .preferential text:nth-of-type(4) {
-  background: url(/images/home/view_detail.png) no-repeat;
+  background: url(https://cdn.it120.cc/apifactory/2019/03/13/e258ffee41a837dc9d13f9a799f11481.png) no-repeat;
   background-size: 172rpx 56rpx;
 }
 
