@@ -1,4 +1,4 @@
-const WXAPI = require('../wxapi/main')
+const WXAPI = require('wxapi/main')
 function wxpay(app, money, orderId, redirectUrl) {
   let remark = "支付";
   let payName = "支付";

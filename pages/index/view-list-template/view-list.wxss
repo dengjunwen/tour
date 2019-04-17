@@ -1,6 +1,6 @@
 .view-info .img {
   position: relative;
-  height: 316rpx;
+  height: 500rpx;
   width: 100%;
 }
 

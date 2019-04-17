@@ -76,6 +76,7 @@ App({
       }
     })
   },
+  
   goLoginPageTimeOut: function () {
     if (this.navigateToLogin) {
       return
@@ -96,5 +97,19 @@ App({
   },
   globalData: {
     isConnected: true
-  }
+  },
+  
 })
+
+ // {
+      //   "pagePath": "pages/destination/destination",
+      //   "text": "目的地",
+      //   "iconPath": "/images/navbar/destination.png",
+      //   "selectedIconPath": "/images/navbar/destination_active.png"
+      // },
+      // {
+      //   "pagePath": "pages/find/find",
+      //   "text": "发现",
+      //   "iconPath": "/images/navbar/find.png",
+      //   "selectedIconPath": "/images/navbar/find_active.png"
+      // },

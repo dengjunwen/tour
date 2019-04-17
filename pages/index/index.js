@@ -1,4 +1,5 @@
 const WXAPI = require('../../utils/wxapi/main')
+const CONFIG = require('../../config.js')
 let app = getApp();
 
 import { View, star, getViewData, dateNow } from "../../utils/util.js"
@@ -12,22 +13,72 @@ Page({
     active: true,
     viewDetail: [],
     loading: true,
-    animationData: {}
+    animationData: {},
+
+    indicatorDots: true,
+    autoplay: true,
+    interval: 3000,
+    duration: 1000,
+    loadingHidden: false, // loading
+    userInfo: {},
+    swiperCurrent: 0,
+    selectCurrent: 0,
+    categories: [],
+    activeCategoryId: 0,
+    goods: [],
+    scrollTop: 0,
+    loadingMoreHidden: true,
+
+    hasNoCoupons: true,
+    coupons: [],
+    searchInput: '',
+
+    curPage: 1,
+    pageSize: 20
+  },
+  //事件处理函数
+  swiperchange: function (e) {
+    this.setData({
+      swiperCurrent: e.detail.current
+    })
+  },
+  toDetailsTap: function (e) {
+    wx.navigateTo({
+      url: "/pages/index/goods-details/index?id=" + e.currentTarget.dataset.id
+    })
+  },
+  tapBanner: function (e) {
+    if (e.currentTarget.dataset.id != 0) {
+      wx.navigateTo({
+        url: "/pages/index/goods-details/index?id=" + e.currentTarget.dataset.id
+      })
+    }
   },
 
-  destRecommend:function(){
+  showBanner:function(){
+    var that = this;
+    WXAPI.banners({
+      type: 'index'
+    }).then(function (res) {
+      if (res.code == 700) {
+        wx.showModal({
+          title: '提示',
+          content: '请在后台添加 banner 轮播图片，自定义类型填写 index',
+          showCancel: false
+        })
+      } else {
+        that.setData({
+          banners: res.data
+        });
+      }
+    })
+  },
+  destRecommend:function(categoryData){
     let that = this;
-    WXAPI.goodsCategory().then(function(res){
-        if(res.code === 0){
-          var data = res.data;
-          for (var i = 0; i < res.data.length; i++) {
-            if (data[i].level == 1 && data[i].type == 'tour') {
-              that.dealViewHot(data[i].id);
-              return;
-            }
-          }
-        }
+    that.setData({
+      'categoryData':categoryData
     });
+    
   },
   dealViewHot: function (categoryId) {
     let _this = this;
@@ -57,108 +108,178 @@ Page({
     });
     
   },
+  dealTicketHot: function (categoryId) {
+    let _this = this;
+    var json = {
+      'categoryId': categoryId,
+      'orderBy': 'ordersDown',
+      'pageSize': 9
+      // 'shopId':
+    };
+    WXAPI.goods(json).then(function (res) {
+      if (res.code == 0) {
+        var miniArr = res.data;
+
+        //获取前9个景区信息
+        let viewHot_1 = miniArr.splice(0, 3);
+        let viewHot_2 = miniArr.splice(0, 3);
+        let viewHot_3 = miniArr.splice(0, 3);
+        // 数据结构满足[[],[],[]]结构，页面中for使用
+        let arr = [];
+        arr.push(viewHot_1);
+        viewHot_2.length > 0 ? arr.push(viewHot_2) : "";
+        viewHot_3.length > 0 ? arr.push(viewHot_3) : "";
+        _this.setData({
+          ticketHot: arr
+        })
+      }
+    });
+
+  },
   onLoad() {
     let _this = this;
+    _this.showBanner();
     // 获取热门城市
     new View("http://70989421.appservice.open.weixin.qq.com/data/city.json", "get").send((res) => {
       let data = res.data.result;
       dealCityHot(data);
-      this.getCity();
+      
     })
-    // 获取热门景区
-    _this.destRecommend();
+    _this.initPagesData();
+   
   },
-  getCity() {
-    let cityName;
-    let _this = this;
-    let cityId;
-    // 允许获取位置
-    wx.showModal({
-      title: "地理位置",
-      content: '允许 "旅游天地+" 访问您的位置吗？',
-      cancelText: "不允许",
-      confirmText: "允许",
-      success(res) {
-        // 允许
-        if (res.confirm) {
-          wx.chooseLocation({
-            success: function (res) {
-              // 获取城市名
-              if (/省/.test(res.address)) {
-                cityName = res.address.split("省")[0]
-              } else {
-                cityName = res.address.split("市")[0]
-              }
-              getViewData(_this.data.allCity, cityName, function (res) {
 
-                _this.spliceTwoView(res)
-              })
-            }
-          })
-        } else {
-          // 默认地址北京
-          cityName = "北京";
-          // 处理数据
-          getViewData(_this.data.allCity, cityName, function (res) {
-            _this.spliceTwoView(res)
-          });
+  //获得顶级分类
+  initPagesData: function () {
+    let _this = this;
+    var categoryData = {};
+    WXAPI.goodsCategory().then(function (res) {
+      if (res.code === 0) {
+        var data = res.data;
+        for (var i = 0; i < res.data.length; i++) {
+          if (data[i].level == 1) {
+            categoryData[data[i].type] = data[i];
+          }
         }
+        // 获取热门景区
+        _this.destRecommend(categoryData);
+        //目的地推荐
+        _this.dealViewHot(categoryData.tour.id);
+        //自驾游推荐（就是门票）
+        _this.dealTicketHot(categoryData.ticket.id);
+        //住宿推荐
+        _this.getHotelRecommand(categoryData.hotel.id);
       }
     });
   },
-  // 首页加载2个景点数据
-  spliceTwoView(res) {
-    let resultArr = res.splice(0, 2)
-    this.setData({
-      viewList: resultArr,
-      loading: false
-    })
-    this.enterAnimate();
-    // 缓存获取到的景区数据，切换时候不在重新获取  
-    if (this.data.active) {
-      wx.setStorageSync('aroundViewList', resultArr)
-    } else {
-      wx.setStorageSync('countryViewList', resultArr)
+ 
+  getHotelRecommand:function(hotelId){
+    var categoryData = wx.getStorageSync("categoryData");
+    var that = this;
+    var data = {
+      'categoryId': hotelId,
+      'recommendStatus': '1',
+      'shopId': '',
+      'orderBy':'priceUp',
+      'pageSize': '10'
+    };
+    WXAPI.goods(data).then(function(res){
+      that.setData({
+        viewList: res.data,
+        loading: false
+      })
+      that.enterAnimate();
+      // 缓存获取到的景区数据，切换时候不在重新获取  
+      if (that.data.active) {
+        wx.setStorageSync('hotelViewList', res.data)
+        wx.setStorageSync('hotelViewListUpdateTime', Date.parse(new Date()));
+      } else {
+        wx.setStorageSync('countryViewList', res.data)
+        wx.setStorageSync('countryViewListUpdateTime', Date.parse(new Date()));
+      }
+    });
+  },
+ 
+
+  chageTabView(e) {
+    this.removeCache("hotelViewListUpdateTime", "hotelViewList");
+    
+    switch(e.currentTarget.dataset.type){
+      case 'hotel':{
+        this.tabGetData(true, "hotelViewList");
+        break;
+      }
+      case 'food':{
+        this.tabGetData(false, "foodViewList")
+        break;
+      }
     }
+    
   },
 
-  // 获取周边热门游
-  getaroundView() {
-    this.tabGetData(true, true, "aroundViewList", cityName)
-  },
-  // 获取国内热门游游
-  getcountryView() {
-    this.tabGetData(false, true, 'countryViewList', "北京")
+  removeCache(lastUpdateTimeKey,key){
+    var lastUpdateTime = wx.getStorageSync(lastUpdateTimeKey);
+    var now = Date.parse(new Date());
+    var temp = now - lastUpdateTime > 10 * 60 * 1000 ? wx.removeStorageSync(key) : "";
   },
 
-  tabGetData(active, loading, key, city) {
+  tabGetData(active, key) {
     let _this = this;
     this.leaveAnimate();
     this.setData({
       active: active,
-      loading: loading
+      loading: true
     })
     if (wx.getStorageSync(key)) {
       this.setData({
         viewList: wx.getStorageSync(key),
-        loading: !loading
+        loading: false
       });
       this.enterAnimate();
     } else {
-      getViewData(_this.data.allCity, city, function (res) {
-        _this.spliceTwoView(res)
-      })
+      switch(key){
+        case "hotelViewList":
+          _this.getHotelRecommand();
+          break;
+      }
     }
   },
-  // 进入景点列表
-  enterViewList() {
-    let allcity = JSON.stringify({
-      allcity: this.data.allCity
-    })
+  //点击分类功能
+  enterViewList:function(e) {
+    var nextViewText = "";
+
+    switch(e.currentTarget.dataset.categorytype){
+      case 'tour':
+        {
+          nextViewText = "景点";
+          break;
+        }
+      case 'ticket':
+        {
+          nextViewText = "门票";
+          break;
+        }
+      case 'hotel':
+        {
+          nextViewText = "住宿";
+          break;
+        }
+      case 'food':
+        {
+          wx.showModal({
+            title: '提示',
+            content: '此功能暂未线上开放，敬请期待',
+            showCancel: false
+          })
+         return;
+        }
+    }
+  var nextviewUrl = 'view-list/view-list?type='+nextViewText+'&categoryId=' + e.currentTarget.dataset.categoryid;
     wx.navigateTo({
-      url: 'view-list/view-list?allcity=' + allcity + ''
-    })
+      url: nextviewUrl
+    });
   },
+ 
   // 动画
   enterAnimate() {
     let animation = wx.createAnimation({

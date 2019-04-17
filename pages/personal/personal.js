@@ -1,31 +1,56 @@
 // pages/personal/personal.js
+
+const CONFIG = require('../../config.js')
+const WXAPI = require('../../utils/wxapi/main')
+
 let app=getApp()
 Page({
   data:{
     userInfo:{}
   },
   onLoad:function(options){
-    // 页面初始化 options为页面跳转所带来的参数
-    app.getUserInfo((res)=>{     
-      let info={
-        avatarUrl:res.avatarUrl,
-        nickName:res.nickName,
-        tel:17708565327,
-        grade:2,
-        vip:true,
-        integrate:100,
-        Cash:20
-      }
-      this.setData({
-        userInfo:info
+
+  },
+  onShow() {
+    let that = this;
+    let userInfo = wx.getStorageSync('userInfo')
+    if (!userInfo) {
+      app.goLoginPageTimeOut()
+    } else {
+      that.setData({
+        userInfo: userInfo,
+        version: CONFIG.mversion
       })
+    }
+    this.getUserApiInfo();
+  },
+  getUserApiInfo: function () {
+    var that = this;
+    WXAPI.userDetail(wx.getStorageSync('token')).then(function (res) {
+      if (res.code == 0) {
+
+        let _data = {}
+        _data.apiUserInfoMap = res.data
+        if (res.data.base.mobile) {
+          _data.userMobile = res.data.base.mobile
+        }
+        that.setData(_data);
+      }
     })
   },
-  edit(){
-    console.log(1)
-    let userInfo=JSON.stringify(this.data.userInfo);
+  relogin:function(e){
+    app.goLoginPageTimeOut();
+  },
+  gotoMyOrder: function (e) {
     wx.navigateTo({
-      url: '/pages/personal/modify-info/modify-info?userInfo='+userInfo+''
+      url: "/pages/index/order-list/index?type=" + e.currentTarget.dataset.type
+    })
+  },
+  aboutUs: function () {
+    wx.showModal({
+      title: '合作或搭建小程序',
+      content: '请联系13241485550，邮箱dengjunwen1992@163.com',
+      showCancel: false
     })
   }
 })

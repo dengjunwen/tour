@@ -1,4 +1,4 @@
-import { View, star, getViewData, dateNow } from "../../../utils/util.js"
+import { View, star, getViewData, dateNow, formatTime, formatLocation, fib, formatDateTime } from "../../../utils/util.js"
 Page({
   data: {
     active: 0,

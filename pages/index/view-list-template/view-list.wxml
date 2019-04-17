@@ -1,21 +1,21 @@
 <template name="viewList">
-  <view class="view-info"  bindtap="enterDetail" data-id="{{sid}}">
+  <view class="view-info"  bindtap="enterDetail" data-id="{{id}}">
     <view class="img">
-      <image src="{{imgurl}}" class="info-img"></image>
+      <image src="{{pic}}" class="info-img"></image>
       <view class="price">
-        <text class="now-price">￥{{now_price}}</text>
-        <text class="old-price">￥{{old_price}}
+        <text class="now-price">￥{{minPrice}}</text>
+        <text class="old-price">￥{{originalPrice}}
           <text class="del"></text>
         </text>
       </view>
     </view>
     <view class="desc">
-      <text class="title"> {{title}}</text>
+      <text class="title"> {{name}}</text>
       <text class="info" wx:if="{{desc}}">{{desc}}</text>
     </view>
     <view class="other">
       <view>
-        <text class="tag hot"  wx:if="{{hot}}">推荐</text>
+        <text class="tag hot"  wx:if="{{recommendStatusStr}}">推荐</text>
         <text class="tag free" wx:if="{{free}}">可定今日</text>
         <view class="tag position" wx:if="{{address}}">
           <text class="icon"></text>

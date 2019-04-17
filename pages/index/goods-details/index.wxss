@@ -326,6 +326,13 @@ swiper-item image {
   text-align: center;
   border: 1px solid #eee;
 }
+.buy-num-box .text-box .text-input{
+  /* width: 80rpx; */
+  height: 64rpx;
+  line-height: 62rpx;
+  text-align: center;
+  border: 1px solid #eee;
+}
 .buy-num-box .num-box .num-input{
   font-size: 28rpx;
 }

@@ -80,7 +80,9 @@
             <view style='position:absolute;bottom:10rpx;'> 购物车 </view>
         </view> -->
         <!-- <view wx:if="{{!goodsDetail.basicInfo.pingtuan}}" class="join-shop-cart" bindtap="toAddShopCar">加入购物车</view> -->
-        <view wx:if="{{!goodsDetail.basicInfo.pingtuan}}" class="now-buy" bindtap="tobuy">立即参团</view>
+        <view wx:if="{{!goodsDetail.basicInfo.pingtuan}}" class="now-buy" bindtap="tobuy">{{buttonText}}</view>
+    
+
         <view wx:if="{{goodsDetail.basicInfo.pingtuan}}" class="join-shop-cart" bindtap="tobuy">单独参团</view>
         <view wx:if="{{goodsDetail.basicInfo.pingtuan}}" class="now-buy" bindtap="toPingtuan">发起拼团</view>
    </view>
@@ -117,8 +119,40 @@
                     <view class="num-jia {{buyNumber== buyNumMax ? 'hui': ''}}" bindtap="numJiaTap">+</view>
                 </view>
              </view>  
-             <view class="popup-join-btn" wx:if="{{shopType =='addShopCar'}}" bindtap="addShopCar">
-                加入购物车
+
+             <view class="buy-num-box" wx:if="{{inputname == true}}">
+                <view class="num-label">姓名 </view>
+                <view class="text-box">
+                    <view class="text-input">
+                       <input  type="text" bindinput='inputName' placeholder="真实姓名" />
+                    </view>
+                </view>
+             </view>  
+
+             <view class="buy-num-box" wx:if="{{inputphone == true}}">
+                <view class="num-label">手机号</view>
+                <view class="text-box">
+                    
+                    <view class="text-input">
+                       <input  type="number" bindinput='inputPhone' placeholder='接收电子票的手机号' />
+                    </view>
+                   
+                </view>
+             </view>  
+             
+              <view class="buy-num-box" wx:if="{{inputidcard == true}}">
+                <view class="num-label">身份证号</view>
+                <view class="text-box">
+                    
+                    <view class="text-input">
+                       <input  type="text" bindinput='inputIdcard' placeholder='一张身份证只能够买三张' />
+                    </view>
+                   
+                </view>
+             </view>  
+              
+             <view class="popup-join-btn" wx:if="{{shopType =='addShopCar'}}" bindtap="buyNow">
+                立即购买
              </view>
              <view class="popup-join-btn" data-shopType="{{shopType}}" wx:if="{{shopType =='tobuy' || shopType =='toPingtuan'}}" bindtap="buyNow">
                 立即购买

@@ -4,7 +4,7 @@ module.exports = {
   mversion: "1.0.0",
   note: '接口封装',
   subDomain: "yingke", // 如果你的域名是： https://api.it120.cc/abcd 那么这里只要填写 abcd
-  appid: "wx048c2e0a9f39d8eb", // 您的小程序的appid，购物单功能需要使用
+  appid: "wx3d39b0b81db730cd", // 您的小程序的appid，购物单功能需要使用
   shareProfile: '丹霞山', // 首页转发的时候话术
   mode:"dev"
 }
