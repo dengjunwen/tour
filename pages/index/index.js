@@ -174,7 +174,6 @@ Page({
   },
  
   getHotelRecommand:function(hotelId){
-    var categoryData = wx.getStorageSync("categoryData");
     var that = this;
     var data = {
       'categoryId': hotelId,
@@ -189,20 +188,41 @@ Page({
         loading: false
       })
       that.enterAnimate();
-      // 缓存获取到的景区数据，切换时候不在重新获取  
-      if (that.data.active) {
-        wx.setStorageSync('hotelViewList', res.data)
-        wx.setStorageSync('hotelViewListUpdateTime', Date.parse(new Date()));
-      } else {
-        wx.setStorageSync('countryViewList', res.data)
-        wx.setStorageSync('countryViewListUpdateTime', Date.parse(new Date()));
-      }
+      wx.setStorageSync('hotelViewList', res.data)
+      wx.setStorageSync('hotelViewListUpdateTime', Date.parse(new Date()));
+     
+    });
+  },
+
+/**
+ * 特产推荐
+ */
+  getFoodRecommand: function (foodCategoryId) {
+    console.log(foodCategoryId);
+    var that = this;
+    var data = {
+      'categoryId': foodCategoryId,
+      'recommendStatus': '1',
+      'shopId': '',
+      'orderBy': 'priceUp',
+      'pageSize': '10'
+    };
+    WXAPI.goods(data).then(function (res) {
+      that.setData({
+        viewList: res.data,
+        loading: false
+      })
+      that.enterAnimate();
+      wx.setStorageSync('foodViewList', res.data)
+      wx.setStorageSync('foodViewListUpdateTime', Date.parse(new Date()));
     });
   },
  
 
-  chageTabView(e) {
+  chageTabView:function(e) {
+
     this.removeCache("hotelViewListUpdateTime", "hotelViewList");
+    this.removeCache("foodViewListUpdateTime", "foodViewList");
     
     switch(e.currentTarget.dataset.type){
       case 'hotel':{
@@ -239,7 +259,10 @@ Page({
     } else {
       switch(key){
         case "hotelViewList":
-          _this.getHotelRecommand();
+          _this.getHotelRecommand(this.data.categoryData.hotel.id);
+          break;
+        case "foodViewList":
+          _this.getFoodRecommand(this.data.categoryData.food.id);
           break;
       }
     }
@@ -266,15 +289,12 @@ Page({
         }
       case 'food':
         {
-          wx.showModal({
-            title: '提示',
-            content: '此功能暂未线上开放，敬请期待',
-            showCancel: false
-          })
-         return;
+          nextViewText = "特产"
+          break;
         }
     }
   var nextviewUrl = 'view-list/view-list?type='+nextViewText+'&categoryId=' + e.currentTarget.dataset.categoryid;
+  console.log(nextviewUrl);
     wx.navigateTo({
       url: nextviewUrl
     });

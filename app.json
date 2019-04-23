@@ -11,6 +11,8 @@
     "pages/other/authorize/authorize",
     "pages/index/goods-details/index",
     "pages/index/to-pay-order/index",
+    "pages/index/address-add/index",
+    "pages/index/select-address/index",
     "pages/index/order-list/index"
   ],
   "window": {

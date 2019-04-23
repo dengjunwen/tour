@@ -126,8 +126,8 @@
         <text wx:else>酒店推荐</text>
       </view>
       <view bindtap="chageTabView" data-type="food">
-        <text wx:if="{{!active}}" class="active">美食推荐</text>
-        <text wx:else>美食推荐</text>
+        <text wx:if="{{!active}}" class="active">特产推荐</text>
+        <text wx:else>特产推荐</text>
       </view>
     </view>
     <view>

@@ -110,7 +110,7 @@
                 </block>
              </view> 
              <view class="buy-num-box">
-                <view class="num-label">购买数量 （人/次）</view>
+                <view class="num-label">购买数量</view>
                 <view class="num-box">
                     <view class="num-jian {{buyNumber == buyNumMin ? 'hui': ''}}" bindtap="numJianTap">-</view>
                     <view class="num-input">
