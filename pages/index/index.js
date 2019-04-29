@@ -48,9 +48,13 @@ Page({
     })
   },
   tapBanner: function (e) {
+    console.log(JSON.stringify(e));
+    console.log(JSON.stringify(e.currentTarget));
+    console.log(JSON.stringify(e.currentTarget.dataset));
+    console.log(JSON.stringify(e.currentTarget.dataset.id));
     if (e.currentTarget.dataset.id != 0) {
       wx.navigateTo({
-        url: "/pages/index/goods-details/index?id=" + e.currentTarget.dataset.id
+        url: "/pages/index/goods-details/index?sid=" + e.currentTarget.dataset.id
       })
     }
   },
