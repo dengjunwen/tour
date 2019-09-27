@@ -2,7 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/destination/destination",
-     "pages/destination/cityView/cityView", 
+    "pages/destination/cityView/cityView",
     "pages/index/view-detail/view-detail",
     "pages/find/find",
     "pages/personal/personal",
@@ -32,7 +32,6 @@
         "iconPath": "/images/navbar/home.png",
         "selectedIconPath": "/images/navbar/home_active.png"
       },
-     
       {
         "pagePath": "pages/personal/personal",
         "text": "我的",
@@ -40,5 +39,6 @@
         "selectedIconPath": "/images/navbar/my_active.png"
       }
     ]
-  }
+  },
+  "sitemapLocation": "sitemap.json"
 }
